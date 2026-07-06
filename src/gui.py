@@ -15,6 +15,7 @@ import customtkinter as ctk
 from tkinter import filedialog, messagebox
 
 from src.parser import parse_file
+from src.pdf_parser import parse_pdf
 from src.generator import generate_all
 
 
@@ -76,13 +77,13 @@ class TallyBridgeApp(ctk.CTk):
 
         ctk.CTkLabel(
             input_frame,
-            text="Zerodha Tax P&L Excel:",
+            text="Zerodha Tax P&L (Excel/PDF):",
             font=ctk.CTkFont(size=12),
         ).grid(row=1, column=0, sticky="w", padx=15, pady=5)
 
         self.file_entry = ctk.CTkEntry(
             input_frame,
-            placeholder_text="Select your taxpnl-*.xlsx file...",
+            placeholder_text="Select your taxpnl-*.xlsx or .pdf file...",
             height=36,
         )
         self.file_entry.grid(row=1, column=1, sticky="ew", padx=5, pady=5)
@@ -165,11 +166,13 @@ class TallyBridgeApp(ctk.CTk):
         self.progress_bar.set(0)
 
     def _browse_file(self):
-        """Open file browser for input Excel file."""
+        """Open file browser for input Excel/PDF file."""
         filepath = filedialog.askopenfilename(
-            title="Select Zerodha Tax P&L Excel",
+            title="Select Zerodha Tax P&L File",
             filetypes=[
+                ("Supported files", "*.xlsx *.pdf"),
                 ("Excel files", "*.xlsx"),
+                ("PDF files", "*.pdf"),
                 ("All files", "*.*"),
             ],
         )
@@ -220,8 +223,8 @@ class TallyBridgeApp(ctk.CTk):
             messagebox.showerror("Error", f"File not found:\n{input_path}")
             return
 
-        if not input_path.endswith(".xlsx"):
-            messagebox.showerror("Error", "Please select a valid .xlsx file.")
+        if not input_path.endswith(".xlsx") and not input_path.endswith(".pdf"):
+            messagebox.showerror("Error", "Please select a valid .xlsx or .pdf file.")
             return
 
         output_path = self.output_entry.get().strip()
@@ -250,7 +253,10 @@ class TallyBridgeApp(ctk.CTk):
             self.after(0, lambda: self._log("📖 Parsing input file..."))
             self.after(0, lambda: self.progress_bar.set(0.2))
 
-            data = parse_file(self.input_file)
+            if self.input_file.lower().endswith(".pdf"):
+                data = parse_pdf(self.input_file)
+            else:
+                data = parse_file(self.input_file)
 
             self.after(0, lambda: self._log(
                 f"   Client: {data.client_name} ({data.client_id})"

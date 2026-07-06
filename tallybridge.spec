@@ -22,8 +22,12 @@ a = Analysis(
     hiddenimports=[
         'openpyxl',
         'customtkinter',
+        'pdfplumber',
+        'pdfminer',
+        'pdfminer.six',
         'src',
         'src.parser',
+        'src.pdf_parser',
         'src.generator',
         'src.gui',
     ],

@@ -1,6 +1,6 @@
 # TallyBridge
 
-Convert Zerodha Tax P&L Excel reports into Tally-compatible import files — zero install, single `.exe`.
+Convert Zerodha Tax P&L Excel/PDF reports into Tally-compatible import files — zero install, single `.exe`.
 
 ## What It Does
 
@@ -21,7 +21,7 @@ Each file uses Tally's import format: **Date | Voucher Type | Particulars | Ledg
 
 1. Download `TallyBridge.exe` from [Releases](../../releases)
 2. Double-click to run
-3. Select your Zerodha Tax P&L Excel file
+3. Select your Zerodha Tax P&L file (`.xlsx` or `.pdf`)
 4. Click **Generate Tally Files**
 5. Import the output files into Tally
 
@@ -44,9 +44,9 @@ python main.py
 ## Supported Input Format
 
 Zerodha Tax P&L report downloaded from:
-**Console → Reports → Tax P&L → Download .xlsx**
+**Console → Reports → Tax P&L → Download .xlsx** (or the PDF version)
 
-The file typically has a name like: `taxpnl-CLIENTID-YYYY_YYYY-Q1-Q4.xlsx`
+The file typically has a name like: `taxpnl-CLIENTID-YYYY_YYYY-Q1-Q4.xlsx` (or `.pdf`)
 
 ### Sheets Parsed
 
@@ -91,6 +91,7 @@ tally-bridge/
 ├── src/
 │   ├── __init__.py
 │   ├── parser.py        # Zerodha Excel parser
+│   ├── pdf_parser.py    # Zerodha PDF parser
 │   ├── generator.py     # Tally Excel output generator
 │   └── gui.py           # CustomTkinter GUI
 └── .github/
@@ -114,6 +115,7 @@ GitHub Actions will automatically:
 
 - **Python 3.11** — Core language
 - **openpyxl** — Excel reading/writing
+- **pdfplumber** — PDF table extraction
 - **CustomTkinter** — Modern dark-mode GUI
 - **PyInstaller** — Single-file Windows executable
 - **GitHub Actions** — Automated builds
