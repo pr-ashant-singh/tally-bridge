@@ -6,6 +6,9 @@ on:
       - 'v*'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: windows-latest
@@ -45,6 +48,13 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: dist/TallyBridge.exe
-          generate_release_notes: true
+          name: TallyBridge ${{ github.ref_name }}
+          body: |
+            ## TallyBridge ${{ github.ref_name }}
+            
+            Convert Zerodha Tax P&L Excel/PDF reports into Tally-compatible import files.
+            
+            ### Download
+            Download `TallyBridge.exe` below and double-click to run. No installation needed.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
