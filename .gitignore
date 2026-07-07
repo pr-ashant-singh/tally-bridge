@@ -28,6 +28,9 @@ env/
 .DS_Store
 Thumbs.db
 
+# Chat summary
+.chat_summary.md
+
 # Output files
 output/
 
