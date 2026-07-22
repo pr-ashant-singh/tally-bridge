@@ -33,12 +33,13 @@ TRADE_SECTIONS = [
 ]
 
 
-def parse_pdf(filepath: str) -> ParsedData:
+def parse_pdf(filepath: str, password: Optional[str] = None) -> ParsedData:
     """
     Parse a Zerodha Tax P&L PDF file.
 
     Args:
         filepath: Path to the .pdf file.
+        password: Optional password for encrypted/protected PDFs.
 
     Returns:
         ParsedData object with all extracted information.
@@ -47,7 +48,7 @@ def parse_pdf(filepath: str) -> ParsedData:
         ValueError: If the file format is not recognized.
         FileNotFoundError: If the file does not exist.
     """
-    pdf = pdfplumber.open(filepath)
+    pdf = pdfplumber.open(filepath, password=password)
     data = ParsedData()
 
     # Extract client info from first page

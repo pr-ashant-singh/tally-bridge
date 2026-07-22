@@ -37,3 +37,4 @@ output/
 # Test files
 *.xlsx
 !tests/fixtures/*.xlsx
+src/test_data/

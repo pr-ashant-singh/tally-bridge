@@ -16,6 +16,7 @@ from tkinter import filedialog, messagebox
 
 from src.parser import parse_file
 from src.pdf_parser import parse_pdf
+from src.pms_parser import is_pms_statement, parse_pms
 from src.generator import generate_all
 
 
@@ -95,6 +96,21 @@ class TallyBridgeApp(ctk.CTk):
             height=36,
             command=self._browse_file,
         ).grid(row=1, column=2, padx=(5, 15), pady=5)
+
+        # Password field (for encrypted PDFs)
+        ctk.CTkLabel(
+            input_frame,
+            text="PDF Password (if any):",
+            font=ctk.CTkFont(size=12),
+        ).grid(row=2, column=0, sticky="w", padx=15, pady=5)
+
+        self.password_entry = ctk.CTkEntry(
+            input_frame,
+            placeholder_text="Leave blank if PDF is not password-protected",
+            height=36,
+            show="•",
+        )
+        self.password_entry.grid(row=2, column=1, columnspan=2, sticky="ew", padx=(5, 15), pady=(5, 15))
 
         # --- Output Section ---
         output_frame = ctk.CTkFrame(self)
@@ -254,7 +270,14 @@ class TallyBridgeApp(ctk.CTk):
             self.after(0, lambda: self.progress_bar.set(0.2))
 
             if self.input_file.lower().endswith(".pdf"):
-                data = parse_pdf(self.input_file)
+                password = self.password_entry.get().strip() or None
+                # Auto-detect PDF format
+                if is_pms_statement(self.input_file, password=password):
+                    self.after(0, lambda: self._log("   Detected: SageOne PMS statement"))
+                    data = parse_pms(self.input_file, password=password)
+                else:
+                    self.after(0, lambda: self._log("   Detected: Zerodha Tax P&L"))
+                    data = parse_pdf(self.input_file, password=password)
             else:
                 data = parse_file(self.input_file)
 
